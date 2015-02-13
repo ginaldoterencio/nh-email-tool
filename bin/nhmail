@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+var nodePath = require('path');
+var program = require('commander');
+var pkg = require('../package.json');
+var nhmail = require('../');
+
+program
+  .version(pkg.version)
+  .command('server [path]')
+  .option('-p, --p <port>', 'Specify a port to listen on')
+  .action(function(path, program) {
+    var projectPath = nodePath.resolve(process.cwd(), path || '');
+    var port  = program.port || 9000;
+
+    nhmail.server(projectPath,  {port: port}, function() {
+      var hostUrl = 'http://localhost:' + port + '/';
+      console.log('Your server is listening at ' + hostUrl);
+    });
+  });
+
+  program.parse(process.argv);
